@@ -36,10 +36,28 @@ RUN apt-get install -y --no-install-recommends xfce4-session \
     libxdamage1 libxdmcp6 libxext6 libxfixes3 \
     libxkbcommon0 libxkbcommon-x11-0 libxrandr2
 
+# Download and install the Google Chrome from the official s
+#RUN wget -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+#    gdebi --n /tmp/google-chrome-stable.deb && \
+#    rm /tmp/google-chrome-stable.deb
+
+# Download and install the Wipter application
+#RUN wget -O /tmp/wipter.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/wipter.deb && \
+#gdebi --n /tmp/wipter.deb && \
+#rm /tmp/wipter.deb
+
 # Download and install the UpRock Mining application from the official source
 RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.10.deb && \
     gdebi --n /tmp/UpRock-Mining.deb && \
     rm /tmp/UpRock-Mining.deb
+
+# Grass
+# Block similar named Grass App and Install the Grass application from the official source
+#RUN apt-mark hold \
+#    grass-core grass-dev-doc grass-dev grass-doc grass-gui grass
+
+#RUN wget -O /tmp/grass.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/grass.deb && \
+#    apt install /tmp/grass.deb -y --allow-change-held-packages && apt update && apt install -f -y && rm /tmp/grass.deb
 
 # Set up X resources for customization
 RUN echo "*customization: -color" > /root/.Xresources
