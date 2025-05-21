@@ -41,14 +41,6 @@ RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRoc
     gdebi --n /tmp/UpRock-Mining.deb && \
     rm /tmp/UpRock-Mining.deb
 
-# Grass
-# Block similar named Grass App and Install the Grass application from the official source
-#RUN apt-mark hold \
-#    grass-core grass-dev-doc grass-dev grass-doc grass-gui grass
-
-#RUN wget -O /tmp/grass.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/grass.deb && \
-#    apt install /tmp/grass.deb -y --allow-change-held-packages && apt update && apt install -f -y && rm /tmp/grass.deb
-
 # Set up X resources for customization
 RUN echo "*customization: -color" > /root/.Xresources
 
