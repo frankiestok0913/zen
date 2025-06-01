@@ -1,4 +1,4 @@
-# Use Ubuntu 24 as the base image
+# Use Ubuntu 24.04 as the base image
 FROM ubuntu:24.04
 
 # Set environment variable to suppress interactive prompts during installation
@@ -7,23 +7,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Preconfigure keyboard layout to English (US)
 RUN echo 'keyboard-configuration keyboard-configuration/layoutcode select us' | debconf-set-selections
 
-RUN apt update && apt upgrade -y
-# Install packages
-RUN apt-get install -y --no-install-recommends xfce4-session \
-    xfwm4 xfce4-panel \
+# Change APT mirror to Vietnam mirror FIRST, then update and upgrade
+# This is crucial if you are facing 403 Forbidden errors
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://vn.archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources && \
+    sed -i 's|http://security.ubuntu.com/ubuntu/|http://vn.archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout="60" && \
+    apt-get upgrade -y
+
+# Install packages (list cleaned up)
+RUN apt-get install -y --no-install-recommends \
+    xfce4-session xfwm4 xfce4-panel \
     tightvncserver xfonts-base xfonts-75dpi xfonts-100dpi \
     gnome-keyring seahorse openssh-server \
-
     dbus dbus-x11 thunar xterm \
     sudo wget curl nano gnupg gdebi util-linux uuid-runtime \
-    apt-transport-https openssh-server \
+    apt-transport-https \
     xautomation proxychains4 tesseract-ocr imagemagick tini iputils-ping \
-
     ca-certificates fonts-liberation xdg-utils \
     libappindicator3-1 libasound2t64 libatk1.0-0 libatk-bridge2.0-0 libatspi2.0-0 libayatana-common0 libayatana-indicator3-7 \
     libbsd0 libc6 libcairo2 libcups2 libcurl4 \
     libdbus-1-3 libexpat1 \
-    libgbm1 libgl1 libglib2.0-0 libgtk-3-0 libgtk-3-0t64 libgtk-3-bin libgtk-3-bin libgtk-3-common libgtk-4-1 libgtk-4-1 libgtk-4-bin libgtk-4-common \
+    libgbm1 libgl1 libglib2.0-0 libgtk-3-0 libgtk-3-0t64 libgtk-3-bin libgtk-3-common libgtk-4-1 libgtk-4-bin libgtk-4-common \
     libnotify4 libnotify-bin libnspr4 libnss3 \
     libpango-1.0-0 libudev1 libuuid1 libvulkan1 \
     libwebkit2gtk-4.1-0 libwebkitgtk-6.0-4 \
@@ -36,28 +41,26 @@ RUN apt-get install -y --no-install-recommends xfce4-session \
     libxdamage1 libxdmcp6 libxext6 libxfixes3 \
     libxkbcommon0 libxkbcommon-x11-0 libxrandr2
 
-# Download and install the Google Chrome from the official s
-#RUN wget -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-#    gdebi --n /tmp/google-chrome-stable.deb && \
-#    rm /tmp/google-chrome-stable.deb
+# Commented out Google Chrome installation
+# RUN wget -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+#     gdebi --n /tmp/google-chrome-stable.deb && \
+#     rm /tmp/google-chrome-stable.deb
 
-# Download and install the Wipter application
-#RUN wget -O /tmp/wipter.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/wipter.deb && \
-#gdebi --n /tmp/wipter.deb && \
-#rm /tmp/wipter.deb
+# Commented out Wipter application installation
+# RUN wget -O /tmp/wipter.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/wipter.deb && \
+# gdebi --n /tmp/wipter.deb && \
+# rm /tmp/wipter.deb
 
 # Download and install the UpRock Mining application from the official source
 RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.10.deb && \
     gdebi --n /tmp/UpRock-Mining.deb && \
     rm /tmp/UpRock-Mining.deb
 
-# Grass
-# Block similar named Grass App and Install the Grass application from the official source
-#RUN apt-mark hold \
-#    grass-core grass-dev-doc grass-dev grass-doc grass-gui grass
-
-#RUN wget -O /tmp/grass.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/grass.deb && \
-#    apt install /tmp/grass.deb -y --allow-change-held-packages && apt update && apt install -f -y && rm /tmp/grass.deb
+# Commented out Grass installation
+# RUN apt-mark hold \
+#     grass-core grass-dev-doc grass-dev grass-doc grass-gui grass
+# RUN wget -O /tmp/grass.deb https://github.com/hoainv1807/Docker-Ubuntu-XFCE-XRDP/releases/download/wipter/grass.deb && \
+#     apt install /tmp/grass.deb -y --allow-change-held-packages && apt update && apt install -f -y && rm /tmp/grass.deb
 
 # Set up X resources for customization
 RUN echo "*customization: -color" > /root/.Xresources
@@ -66,7 +69,7 @@ RUN echo "*customization: -color" > /root/.Xresources
 RUN mkdir -p /root/.vnc
 RUN mkdir -p /root/.local/share
 
-# Set alias for zutty as default terminal emulator
+# Set alias for xterm as default terminal emulator
 RUN update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/xterm 100
 
 # Create .Xauthority for root and ensure correct permissions
