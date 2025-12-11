@@ -52,7 +52,7 @@ RUN apt-get install -y --no-install-recommends \
 # rm /tmp/wipter.deb
 
 # Download and install the UpRock Mining application from the official source
-RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.14.deb && \
+RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.15.deb && \
     gdebi --n /tmp/UpRock-Mining.deb && \
     rm /tmp/UpRock-Mining.deb
 
