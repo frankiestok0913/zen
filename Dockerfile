@@ -47,9 +47,9 @@ RUN apt-get install -y --no-install-recommends \
 #     rm /tmp/google-chrome-stable.deb
 
 # Commented out Wipter application installation
-RUN wget -O /tmp/wipter.deb https://provider-assets.wipter.com/latest/linux/arm64/wipter-app-arm64.deb && \
-    gdebi --n /tmp/wipter.deb && \
-    rm /tmp/wipter.deb
+#RUN wget -O /tmp/wipter.deb https://provider-assets.wipter.com/latest/linux/arm64/wipter-app-arm64.deb && \
+#    gdebi --n /tmp/wipter.deb && \
+#    rm /tmp/wipter.deb
 
 # Download and install the UpRock Mining application from the official source
 RUN wget -O /tmp/UpRock-Mining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.16.deb && \
